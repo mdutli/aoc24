@@ -8,8 +8,8 @@ import java.util.Scanner;
 
 public class SolOne {
 
-    private static List<Integer> list1 = new ArrayList<>();
-    private static List<Integer> list2 = new ArrayList<>();
+    private static final List<Integer> list1 = new ArrayList<>();
+    private static final List<Integer> list2 = new ArrayList<>();
 
     public static void main(String[] args) {
         readFile();
