@@ -3,10 +3,9 @@ package day01;
 import utils.TextUtils;
 
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
 
-public class SolOne {
+public class SolTwo {
 
     public static void main(String[] args) {
         List<Integer> list1 = new ArrayList<>();
@@ -15,14 +14,19 @@ public class SolOne {
             list1.add(Integer.parseInt(line[0]));
             list2.add(Integer.parseInt(line[1]));
         });
-        Collections.sort(list1);
-        Collections.sort(list2);
-        int total = 0;
-        for (int i = 0; i < list1.size(); i++) {
-            total += Math.abs(list1.get(i) - list2.get(i));
+        int similarityScore = 0;
+        int amount = 0;
+        for (int val1 : list1) {
+            for (int val2 : list2) {
+                if (val1 == val2) {
+                    amount++;
+                }
+            }
+            if (amount != 0) {
+                similarityScore += val1 * amount;
+                amount = 0;
+            }
         }
-        System.out.println(total);
+        System.out.println(similarityScore);
     }
 }
-
-
