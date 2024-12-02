@@ -11,7 +11,7 @@ public class SolOne {
     public static void main(String[] args) {
         List<Integer> list1 = new ArrayList<>();
         List<Integer> list2 = new ArrayList<>();
-        TextUtils.readFileLines("src/day01/input.txt").forEach(line -> {
+        TextUtils.readFileLines("src/day01/input.txt", " {3}").forEach(line -> {
             list1.add(Integer.parseInt(line[0]));
             list2.add(Integer.parseInt(line[1]));
         });
