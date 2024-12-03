@@ -1,38 +1,31 @@
 package day03;
 
-import java.util.Arrays;
 import java.util.List;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
+import java.util.stream.Collectors;
 
 import utils.TextUtils;
 
 public class SolOne {
-
     public static void main(String[] args) {
-        List<String[]> inputs = TextUtils.readFileLines("src/day02/input.txt", " ");
-        int safeLevelsCounter = 0;
-        for (String[] inputLevel : inputs) {
-            int[] level = Arrays.stream(inputLevel).mapToInt(Integer::parseInt).toArray();
-            if (isLevelSafe(level)) {
-                safeLevelsCounter++;
-            }
-        }
-        System.out.println(safeLevelsCounter);
+        List<String> inputs = TextUtils.readFileWhole("src/day03/input.txt", "(mul\\([0-9]{1,3},[0-9]{1,3}\\))");
+
+        System.out.println((Integer)inputs.stream().map(SolOne::multiplyValues).mapToInt(Integer::intValue).sum());
     }
 
-    private static boolean isLevelSafe(int[] level) {
-        boolean isAscending = level[0] < level[1];
-        for (int i = 0; i + 1 < level.length; i++) {
-            int thisValue = level[i];
-            int nextValue = level[i + 1];
-            int diff = Math.abs(thisValue - nextValue);
-            if (isAscending && !(thisValue < nextValue && diff <= 3)) {
-                return false;
-            } else if (!isAscending && !(thisValue > nextValue && diff <= 3)) {
-                return false;
-            }
+    private static int multiplyValues(String matchedString) {
+        String numberRegex = "([0-9]{1,3}),([0-9]{1,3})";
+        Pattern numberPattern = Pattern.compile(numberRegex);
+        Matcher numberMatcher = numberPattern.matcher(matchedString);
+        if (numberMatcher.find()) {
+            System.out.println(numberMatcher.group(1));
+            System.out.println(numberMatcher.group(2));
+            return Integer.parseInt(numberMatcher.group(1)) * Integer.parseInt(numberMatcher.group(2));
         }
-        return true;
+        return 0;
     }
+
 }
 
 

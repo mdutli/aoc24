@@ -1,73 +1,38 @@
 package day03;
 
-import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
-import java.util.concurrent.atomic.AtomicInteger;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 import utils.TextUtils;
 
 public class SolTwo {
 
     public static void main(String[] args) {
-        List<String[]> inputs = TextUtils.readFileLines("src/day02/input.txt", " ");
-        AtomicInteger safeLevelsCounter = new AtomicInteger();
-        inputs.forEach(line -> {
-            int[] level = Arrays.stream(line).mapToInt(Integer::parseInt).toArray();
-            if (isLevelSafe(level) || isModifiedLevelSafe(level)) {
-                safeLevelsCounter.getAndIncrement();
+        List<String> inputs = TextUtils.readFileWhole("src/day03/input.txt", "(mul\\([0-9]{1,3},[0-9]{1,3}\\)|do\\(\\)|don't\\(\\))");
+        boolean mode = true;
+        int total = 0;
+        for (String input : inputs) {
+            if (input.equals("don't()")) {
+                mode = false;
             }
-        });
-        System.out.println(safeLevelsCounter.get());
-    }
-
-    private static boolean isModifiedLevelSafe(int[] level) {
-        for (int i = 0; i < level.length; i++) {
-            int[] modifiedLine = buildModifiedLine(level, i);
-            if (isLevelSafe(modifiedLine)) {
-                return true;
+            if (input.equals("do()")) {
+                mode = true;
+            }
+            if (mode) {
+                total += multiplyValues(input);
             }
         }
-        return false;
+        System.out.println(total);
     }
 
-    private static int[] buildModifiedLine(int[] level, int i) {
-        ArrayList<Integer> modifiedLine = new ArrayList<>();
-        for (int j = 0; j < level.length; j++) {
-            if (i != j) {
-                modifiedLine.add(level[j]);
-            }
+    private static int multiplyValues(String matchedString) {
+        String numberRegex = "([0-9]{1,3}),([0-9]{1,3})";
+        Pattern numberPattern = Pattern.compile(numberRegex);
+        Matcher numberMatcher = numberPattern.matcher(matchedString);
+        if (numberMatcher.find()) {
+            return Integer.parseInt(numberMatcher.group(1)) * Integer.parseInt(numberMatcher.group(2));
         }
-        return modifiedLine.stream().mapToInt(Integer::intValue).toArray();
-    }
-
-    private static boolean isLevelSafe(int[] level) {
-        boolean isAscending = false;
-        int previous = -1;
-        for (int i = 0; i < level.length; i++) {
-            int current = level[i];
-            if (i == 0) {
-                previous = current;
-            } else {
-                int diff = current - previous;
-                int diffAbs = Math.abs(diff);
-                if (diffAbs < 1 || diffAbs > 3) {
-                    return false;
-                }
-
-                if (i == 1) {
-                    isAscending = (diff > 0);
-                } else {
-                    if (isAscending && diff < 0) {
-                        return false;
-                    }
-                    if (!isAscending && diff > 0) {
-                        return false;
-                    }
-                }
-                previous = current;
-            }
-        }
-        return true;
+        return 0;
     }
 }
