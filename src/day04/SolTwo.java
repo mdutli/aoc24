@@ -1,9 +1,8 @@
 package day04;
 
-import java.util.List;
-import java.util.regex.Matcher;
-
 import utils.TextUtils;
+
+import java.util.List;
 
 public class SolTwo {
 
@@ -14,13 +13,11 @@ public class SolTwo {
             matrix[i] = inputs.get(i);
         }
         int count = 0;
-        for (int y = 0; y < matrix.length; y++) {
-            for (int x = 0; x < matrix[y].length; x++) {
-                if (y > 0 && x > 0) {
-                    if (matrix[y][x].equals("A")) {
-                        if (checkM(matrix, y, x) && checkS(matrix, y, x)) {
-                            count++;
-                        }
+        for (int y = 1; y < matrix.length - 1; y++) {
+            for (int x = 1; x < matrix[y].length - 1; x++) {
+                if (matrix[y][x].equals("A")) {
+                    if (checkSurroundings(matrix, x, y)) {
+                        count++;
                     }
                 }
             }
@@ -28,17 +25,14 @@ public class SolTwo {
         System.out.println(count);
     }
 
-    private static boolean checkS(String[][] matrix, int x, int y) {
-        if (matrix[x + 1][y - 1].equals("S") || matrix[x + 1][y + 1].equals("S")) {
-            return true;
+    private static boolean checkSurroundings(String[][] matrix, int x, int y) {
+        String lT = matrix[y - 1][x - 1];
+        String lD = matrix[y + 1][x - 1];
+        String rT = matrix[y - 1][x + 1];
+        String rD = matrix[y + 1][x + 1];
+        if (lT.equals(rD) || lD.equals(rT)) {
+            return false;
         }
-        return false;
-    }
-
-    private static boolean checkM(String[][] matrix, int x, int y) {
-        if (matrix[x - 1][y - 1].equals("M") || matrix[x - 1][y + 1].equals("M")) {
-            return true;
-        }
-        return false;
+        return lT.matches("[MS]") && lD.matches("[MS]") && rT.matches("[MS]") && rD.matches("[MS]");
     }
 }
